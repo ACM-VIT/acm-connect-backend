@@ -1,0 +1,26 @@
+{
+  "name": "acm-connect-backend",
+  "version": "1.0.0",
+  "description": "![ACM-HEADER](https://user-images.githubusercontent.com/14032427/92643737-e6252e00-f2ff-11ea-8a51-1f1b69caba9f.png)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ACM-VIT/acm-connect-backend.git"
+  },
+  "author": "ACM_VIT",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ACM-VIT/acm-connect-backend/issues"
+  },
+  "homepage": "https://github.com/ACM-VIT/acm-connect-backend#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "firebase-admin": "^9.11.0"
+  }
+}
