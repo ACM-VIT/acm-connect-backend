@@ -1,0 +1,38 @@
+{
+  "name": "acm-connect-backend",
+  "version": "1.0.0",
+  "description": "Backend for Whatsapp Group Manager",
+  "main": "index.js",
+  "scripts": {
+    "nodemon": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ACM-VIT/acm-connect-backend.git"
+  },
+  "author": "ACM_VIT",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ACM-VIT/acm-connect-backend/issues"
+  },
+  "homepage": "https://github.com/ACM-VIT/acm-connect-backend#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
+    "dotenv": "^10.0.0",
+    "eslint": "^7.31.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-node": "^4.1.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "express": "^4.17.1",
+    "firebase-admin": "^9.11.0",
+    "nodemon": "^2.0.12",
+    "prettier": "^2.3.2"
+  }
+}
