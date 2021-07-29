@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const compression = require("compression");
 const admin = require("firebase-admin");
-const serviceAccount = require("./serviceAccountKey.json");
+const serviceAccount = require("./serviceAccount.json");
 
 
 require("dotenv").config();
@@ -69,8 +69,13 @@ app.get("/display", async (req, res) => {
 
 app.get("/memoryUpdate", async (req, res) => {
   try {
-    const groupList = await groups.get();
+    const groupData = await groups.get();
+    let groupList = [];
     clearMemory();
+    groupData.forEach((doc) => {
+      const obj = doc.data();
+      groupList.push(obj);
+    });
     setMemoryArray(groupList);
     triggerLastUpdated();
     return res.json({ success: true });
@@ -85,7 +90,13 @@ app.get("/getLink", async (req, res) => {
   if (isMemoryEmpty()) {
     try {
       const groupData = await groups.get();
-      setMemoryArray(groupData);
+      let groupList = [];
+      clearMemory();
+      groupData.forEach((doc) => {
+        const obj = doc.data();
+        groupList.push(obj);
+      });
+      setMemoryArray(groupList);
       console.log("memory was empty, fetched new values : ", getMemory());
     } catch (e) {
       return res.json({ success: false, step: 92, error: e.message });
@@ -107,9 +118,9 @@ app.get("/getLink", async (req, res) => {
   }
 
   /** loop over the array to find vacant groups */
-  groupList.forEach(async ({ maxLimit, currentCount, allow_more, joiningLink, name }) => {
+  groupList.forEach(async ({ maxLimit, currentCount, allow_more, joiningLink, name }, i) => {
     if (allow_more) {
-      currentCount++;
+      currentCount += 5;
       if (currentCount >= maxLimit)
         allow_more = false;
       try {
@@ -121,7 +132,7 @@ app.get("/getLink", async (req, res) => {
       } catch (e) {
         return res.json({ success: false, step: 116, error: e.message });
       }
-      setMemoryArray(groupList)
+      setMemory(i, { "maxLimit": maxLimit, "currentCount": currentCount, "allow_more": allow_more, "joiningLink": joiningLink, "name": name });
       return res.json({ success: true, data: { link: joiningLink } })
     }
     else
