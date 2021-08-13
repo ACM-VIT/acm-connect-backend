@@ -3,9 +3,13 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const compression = require("compression");
 const admin = require("firebase-admin");
+const passport = require("passport");
 const serviceAccount = require("../serviceAccount.json");
 
 require("dotenv").config();
+
+// Passport config
+require("./auth/passport")(passport);
 
 const app = express();
 
@@ -16,6 +20,12 @@ app.use((req, res, next) => {
   res.set("Cache-Control", "no-cache");
   next();
 });
+
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use("/auth", require("./auth/auth"));
 
 const {
   getMemory,
