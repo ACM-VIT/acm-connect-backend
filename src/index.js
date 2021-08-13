@@ -1,9 +1,9 @@
+/* eslint-disable no-await-in-loop */
 const express = require("express");
 const bodyParser = require("body-parser");
 const compression = require("compression");
 const admin = require("firebase-admin");
-const serviceAccount = require("./serviceAccount.json");
-
+const serviceAccount = require("../../serviceAccount.json");
 
 require("dotenv").config();
 
@@ -24,7 +24,7 @@ const {
   triggerLastUpdated,
   isMemoryEmpty,
   clearMemory,
-} = require("./memory");
+} = require("./services/memory");
 
 const port = process.env.PORT || 3001;
 admin.initializeApp({
@@ -46,7 +46,6 @@ app.post("/data", async (req, res) => {
   });
   res.json({ Message: "Action Completed" });
 });
-
 
 app.post("/update", async (req, res) => {
   const docRef = groups.doc(req.body.name);
@@ -70,7 +69,7 @@ app.get("/display", async (req, res) => {
 app.get("/memoryUpdate", async (req, res) => {
   try {
     const groupData = await groups.get();
-    let groupList = [];
+    const groupList = [];
     clearMemory();
     groupData.forEach((doc) => {
       const obj = doc.data();
@@ -86,11 +85,11 @@ app.get("/memoryUpdate", async (req, res) => {
 
 /** to get the whatsapp link */
 app.get("/getLink", async (req, res) => {
-  /** if memory is empty, then call database */
   if (isMemoryEmpty()) {
+    /** check if memory is empty and fetch data from database and set it in memory */
     try {
       const groupData = await groups.get();
-      let groupList = [];
+      const groupList = [];
       clearMemory();
       groupData.forEach((doc) => {
         const obj = doc.data();
@@ -108,37 +107,49 @@ app.get("/getLink", async (req, res) => {
 
   /** If last group is half filled send a mail to the admin */
   try {
-    const lastGroup = groupList[groupList.length - 1]
+    const lastGroup = groupList[groupList.length - 1];
     if (lastGroup.currentCount > 150) {
-      //send mail
+      // send mail
     }
-  }
-  catch (e) {
+  } catch (e) {
     return res.json({ success: false, step: 105, error: e.message });
   }
 
   /** loop over the array to find vacant groups */
-  groupList.forEach(async ({ maxLimit, currentCount, allow_more, joiningLink, name }, i) => {
-    if (allow_more) {
-      currentCount += 5;
-      if (currentCount >= maxLimit)
-        allow_more = false;
+  for (let i = 0; i < groupList.length; i += 1) {
+    const group = groupList[i];
+    const { name, joiningLink, maxLimit } = group;
+    let { currentCount, allow_more: allowMore } = group;
+
+    if (allowMore) {
+      currentCount += 1;
+
+      if (currentCount >= maxLimit) {
+        allowMore = false;
+      }
+
       try {
         const docRef = groups.doc(name);
         await docRef.update({
           currentCount: currentCount,
-          allow_more: allow_more
+          allowMore: allowMore,
         });
       } catch (e) {
         return res.json({ success: false, step: 116, error: e.message });
       }
-      setMemory(i, { "maxLimit": maxLimit, "currentCount": currentCount, "allow_more": allow_more, "joiningLink": joiningLink, "name": name });
-      return res.json({ success: true, data: { link: joiningLink } })
+
+      setMemory(i, {
+        name,
+        maxLimit,
+        joiningLink,
+        currentCount,
+        allow_more: allowMore,
+      });
+      return res.json({ success: true, link: joiningLink });
     }
-    else
-      return res.json({ success: false, error: "All groups are full" })
-  })
-})
+  }
+  return res.json({ success: false, error: "All groups are full" });
+});
 
 app.listen(port, () => {
   console.info(`Running on ${port}`);
