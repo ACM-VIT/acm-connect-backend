@@ -3,7 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const compression = require("compression");
 const admin = require("firebase-admin");
-const serviceAccount = require("../../serviceAccount.json");
+const serviceAccount = require("../serviceAccount.json");
 
 require("dotenv").config();
 
