@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable no-await-in-loop */
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -5,6 +6,7 @@ const compression = require("compression");
 const admin = require("firebase-admin");
 const passport = require("passport");
 const serviceAccount = require("../serviceAccount.json");
+const cors = require('cors');
 const { verifyToken } = require("./middleware/auth");
 
 require("dotenv").config();
@@ -25,6 +27,8 @@ app.use((req, res, next) => {
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(cors())
 
 app.use("/auth", require("./auth/auth"));
 
@@ -53,7 +57,7 @@ app.post("/data", verifyToken, async (req, res) => {
     joiningLink: req.body.joiningLink,
     maxLimit: req.body.maxLimit,
     currentCount: req.body.currentCount,
-    allow_more: req.body.allow_more,
+    allowMore: req.body.allowMore,
   });
   res.json({ Message: "Action Completed" });
 });
@@ -63,6 +67,12 @@ app.post("/update", verifyToken, async (req, res) => {
   await docRef.update({
     currentCount: req.body.currentCount,
   });
+  res.json({ Message: "Action Completed" });
+});
+
+app.post("/delete", async (req, res) => {
+  const docRef = groups.doc(req.body.name);
+  await docRef.delete();
   res.json({ Message: "Action Completed" });
 });
 
@@ -130,7 +140,7 @@ app.get("/getLink", async (req, res) => {
   for (let i = 0; i < groupList.length; i += 1) {
     const group = groupList[i];
     const { name, joiningLink, maxLimit } = group;
-    let { currentCount, allow_more: allowMore } = group;
+    let { currentCount, allowMore } = group;
 
     if (allowMore) {
       currentCount += 1;
@@ -154,7 +164,7 @@ app.get("/getLink", async (req, res) => {
         maxLimit,
         joiningLink,
         currentCount,
-        allow_more: allowMore,
+        allowMore,
       });
       return res.json({ success: true, link: joiningLink });
     }
