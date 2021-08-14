@@ -5,6 +5,7 @@ const compression = require("compression");
 const admin = require("firebase-admin");
 const passport = require("passport");
 const serviceAccount = require("../serviceAccount.json");
+const { verifyToken } = require("./middleware/auth");
 
 require("dotenv").config();
 
@@ -45,7 +46,7 @@ admin.initializeApp({
 const database = admin.firestore();
 const groups = database.collection("groups");
 
-app.post("/data", async (req, res) => {
+app.post("/data", verifyToken, async (req, res) => {
   const docRef = groups.doc(req.body.name);
   await docRef.set({
     name: req.body.name,
@@ -57,7 +58,7 @@ app.post("/data", async (req, res) => {
   res.json({ Message: "Action Completed" });
 });
 
-app.post("/update", async (req, res) => {
+app.post("/update", verifyToken, async (req, res) => {
   const docRef = groups.doc(req.body.name);
   await docRef.update({
     currentCount: req.body.currentCount,
