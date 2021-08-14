@@ -6,7 +6,7 @@ const compression = require("compression");
 const admin = require("firebase-admin");
 const passport = require("passport");
 const cors = require("cors");
-const serviceAccount = require("../serviceAccount.json");
+const serviceAccountObject = require("./firebase");
 const { verifyToken } = require("./middleware/auth");
 
 require("dotenv").config();
@@ -28,7 +28,7 @@ app.use((req, res, next) => {
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(cors())
+app.use(cors());
 
 app.use("/auth", require("./auth/auth"));
 
@@ -42,8 +42,9 @@ const {
 } = require("./services/memory");
 
 const port = process.env.PORT || 3001;
+console.log(serviceAccountObject);
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+  credential: admin.credential.cert(serviceAccountObject),
   databaseURL: process.env.DATABASEURL,
 });
 
