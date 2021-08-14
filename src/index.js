@@ -70,7 +70,7 @@ app.post("/update", verifyToken, async (req, res) => {
   res.json({ Message: "Action Completed" });
 });
 
-app.post("/delete", async (req, res) => {
+app.post("/delete", verifyToken, async (req, res) => {
   const docRef = groups.doc(req.body.name);
   await docRef.delete();
   res.json({ Message: "Action Completed" });
@@ -105,7 +105,7 @@ app.get("/memoryUpdate", async (req, res) => {
 });
 
 /** to get the whatsapp link */
-app.get("/getLink", async (req, res) => {
+app.get("/getLink", verifyToken, async (req, res) => {
   if (isMemoryEmpty()) {
     /** check if memory is empty and fetch data from database and set it in memory */
     try {
