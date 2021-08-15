@@ -6,13 +6,13 @@ const compression = require("compression");
 const admin = require("firebase-admin");
 const passport = require("passport");
 const cors = require("cors");
-const serviceAccountObject = require("./firebase");
-const { verifyToken } = require("./middleware/auth");
+const serviceAccountObject = require("./src/firebase");
+const { verifyToken } = require("./src/middleware/auth");
 
 require("dotenv").config();
 
 // Passport config
-require("./auth/passport")(passport);
+require("./src/auth/passport")(passport);
 
 const app = express();
 
@@ -30,7 +30,7 @@ app.use(passport.session());
 
 app.use(cors());
 
-app.use("/auth", require("./auth/auth"));
+app.use("/auth", require("./src/auth/auth"));
 
 const {
   getMemory,
@@ -39,7 +39,7 @@ const {
   triggerLastUpdated,
   isMemoryEmpty,
   clearMemory,
-} = require("./services/memory");
+} = require("./src/services/memory");
 
 const port = process.env.PORT || 3001;
 console.log(serviceAccountObject);
