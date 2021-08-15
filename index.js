@@ -87,7 +87,10 @@ app.post("/data", verifyToken, async (req, res) => {
 app.post("/update", verifyToken, async (req, res) => {
   const docRef = groups.doc(req.body.name);
   await docRef.update({
+    joiningLink: req.body.joiningLink,
+    maxLimit: req.body.maxLimit,
     currentCount: req.body.currentCount,
+    allowMore: req.body.allowMore
   });
   res.json({ Message: "Action Completed" });
 });
@@ -193,7 +196,7 @@ app.get("/getLink", async (req, res) => {
         currentCount,
         allowMore,
       });
-      return res.json({ success: true, link: joiningLink });
+      return res.status(301).redirect(joiningLink);
     }
   }
   return res.json({ success: false, error: "All groups are full" });
