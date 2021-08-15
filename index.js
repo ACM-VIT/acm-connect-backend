@@ -14,7 +14,8 @@ require("dotenv").config();
 const emails = [
   "mittalanish789@gmail.com",
   "am.anishmittal@gmail.com",
-  "swarupkharulsk@gmail.com"
+  "swarupkharulsk@gmail.com",
+  "pranavdesai.psd@gmail.com"
 ]
 
 const transporter = nodemailer.createTransport({
