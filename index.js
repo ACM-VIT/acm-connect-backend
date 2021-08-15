@@ -11,12 +11,8 @@ const serviceAccountObject = require("./src/firebase");
 const { verifyToken } = require("./src/middleware/auth");
 require("dotenv").config();
 
-const emails = [
-  "mittalanish789@gmail.com",
-  "am.anishmittal@gmail.com",
-  "swarupkharulsk@gmail.com",
-  "pranavdesai.psd@gmail.com"
-]
+const emails = require("./src/services/sendemailsto");
+
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
@@ -131,7 +127,7 @@ app.get("/memoryUpdate", async (req, res) => {
 });
 
 /** to get the whatsapp link */
-app.get("/getLink", verifyToken, async (req, res) => {
+app.get("/getLink", async (req, res) => {
   if (isMemoryEmpty()) {
     /** check if memory is empty and fetch data from database and set it in memory */
     try {
