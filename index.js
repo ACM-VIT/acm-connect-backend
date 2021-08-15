@@ -102,7 +102,7 @@ app.post("/delete", verifyToken, async (req, res) => {
   res.json({ Message: "Action Completed" });
 });
 
-app.get("/display", async (req, res) => {
+app.get("/display", verifyToken, async (req, res) => {
   const groupData = await groups.get();
   const data = [];
   groupData.forEach((doc) => {
