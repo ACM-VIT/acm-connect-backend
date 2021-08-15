@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "format": "prettier --write \"src/**/*.js\"",
-    "start": "nodemon ./src/index"
+    "start:dev": "nodemon ./src/index",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -36,6 +37,7 @@
     "firebase-admin": "^9.11.0",
     "http-errors": "^1.8.0",
     "jsonwebtoken": "^8.5.1",
+    "nodemailer": "^6.6.3",
     "nodemon": "^2.0.12",
     "passport": "^0.4.1",
     "passport-google-oauth20": "^2.0.0",

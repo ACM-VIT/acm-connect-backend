@@ -6,13 +6,37 @@ const compression = require("compression");
 const admin = require("firebase-admin");
 const passport = require("passport");
 const cors = require("cors");
-const serviceAccountObject = require("./firebase");
-const { verifyToken } = require("./middleware/auth");
-
+const nodemailer = require("nodemailer");
+const serviceAccountObject = require("./src/firebase");
+const { verifyToken } = require("./src/middleware/auth");
 require("dotenv").config();
 
+const emails = [
+  "mittalanish789@gmail.com",
+  "am.anishmittal@gmail.com",
+  "swarupkharulsk@gmail.com"
+]
+
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.PASSWORD,
+  },
+});
+
+const mailOptions = {
+  from: 'acmvitconnect@gmail.com', // sender address
+  to: emails, // list of receivers
+  subject: "Whatsapp groups ACM-CONNECT-VIT", // Subject line
+  text: `Hello, all the groups for acm-connect is about to fill, please add new groups!`, // plain text body
+};
+
+
 // Passport config
-require("./auth/passport")(passport);
+require("./src/auth/passport")(passport);
 
 const app = express();
 
@@ -30,7 +54,7 @@ app.use(passport.session());
 
 app.use(cors());
 
-app.use("/auth", require("./auth/auth"));
+app.use("/auth", require("./src/auth/auth"));
 
 const {
   getMemory,
@@ -39,7 +63,7 @@ const {
   triggerLastUpdated,
   isMemoryEmpty,
   clearMemory,
-} = require("./services/memory");
+} = require("./src/services/memory");
 
 const port = process.env.PORT || 3001;
 console.log(serviceAccountObject);
@@ -130,8 +154,13 @@ app.get("/getLink", verifyToken, async (req, res) => {
   /** If last group is half filled send a mail to the admin */
   try {
     const lastGroup = groupList[groupList.length - 1];
-    if (lastGroup.currentCount > 150) {
-      // send mail
+    if (lastGroup.currentCount > lastGroup.maxLimit / 2) {
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          return console.log(error);
+        }
+        return console.log("Message sent: %s", info.messageId);
+      });
     }
   } catch (e) {
     return res.json({ success: false, step: 105, error: e.message });
