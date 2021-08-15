@@ -29,7 +29,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const mailOptions = {
-  from: 'acmvitconnect@gmail.com', // sender address
+  from: 'noreply.acmvit@gmail.com', // sender address
   to: emails, // list of receivers
   subject: "Whatsapp groups ACM-CONNECT-VIT", // Subject line
   text: `Hello, all the groups for acm-connect is about to fill, please add new groups!`, // plain text body
