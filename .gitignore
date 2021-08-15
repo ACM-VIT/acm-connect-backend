@@ -1,4 +1,4 @@
 node_modules/
 .env
 serviceAccountKey.json
-./src/auth/emails.json
+src/auth/emails.json
