@@ -196,7 +196,7 @@ app.get("/getLink", async (req, res) => {
         currentCount,
         allowMore,
       });
-      return res.status(301).redirect(joiningLink);
+      return res.status(302).redirect(joiningLink);
     }
   }
   return res.json({ success: false, error: "All groups are full" });
