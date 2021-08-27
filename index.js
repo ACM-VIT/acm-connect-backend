@@ -156,7 +156,7 @@ app.get("/getLink", async (req, res) => {
     const lastGroup = groupList[groupList.length - 1];
     if (lastGroup.currentCount > lastGroup.maxLimit / 2) {
       try {
-        transporter.sendMail(mailOptions, (error, info) => {
+        await transporter.sendMail(mailOptions, (error, info) => {
           if (error) {
             return console.log(error);
           }
