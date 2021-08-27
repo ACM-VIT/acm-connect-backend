@@ -77,8 +77,8 @@ app.post("/data", verifyToken, async (req, res) => {
   await docRef.set({
     name: req.body.name,
     joiningLink: req.body.joiningLink,
-    maxLimit: req.body.maxLimit,
-    currentCount: req.body.currentCount,
+    maxLimit: parseInt(req.body.maxLimit, 10),
+    currentCount: parseInt(req.body.currentCount, 10),
     allowMore: req.body.allowMore,
   });
   res.json({ Message: "Action Completed" });
@@ -88,8 +88,8 @@ app.post("/update", verifyToken, async (req, res) => {
   const docRef = groups.doc(req.body.name);
   await docRef.update({
     joiningLink: req.body.joiningLink,
-    maxLimit: req.body.maxLimit,
-    currentCount: req.body.currentCount,
+    maxLimit: parseInt(req.body.maxLimit, 10),
+    currentCount: parseInt(req.body.currentCount, 10),
     allowMore: req.body.allowMore
   });
   res.json({ Message: "Action Completed" });
