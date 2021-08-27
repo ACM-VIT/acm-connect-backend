@@ -14,7 +14,7 @@ module.exports = function (passport) {
         const newUser = profile.emails[0].value;
 
         try {
-          if (true) { //emails.email.includes(newUser)
+          if (emails.email.includes(newUser)) {
             done(null, newUser);
           } else {
             done(null, false);
