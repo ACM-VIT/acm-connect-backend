@@ -155,12 +155,16 @@ app.get("/getLink", async (req, res) => {
   try {
     const lastGroup = groupList[groupList.length - 1];
     if (lastGroup.currentCount > lastGroup.maxLimit / 2) {
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          return console.log(error);
-        }
-        return console.log("Message sent: %s", info.messageId);
-      });
+      try {
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            return console.log(error);
+          }
+          return console.log("Message sent: %s", info.messageId);
+        });
+      } catch (e) {
+        return res.json({ success: false, step: 166, error: e.message });
+      }
     }
   } catch (e) {
     return res.json({ success: false, step: 105, error: e.message });
