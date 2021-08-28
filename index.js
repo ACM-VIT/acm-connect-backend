@@ -11,11 +11,8 @@ const serviceAccountObject = require("./src/firebase");
 const { verifyToken } = require("./src/middleware/auth");
 require("dotenv").config();
 
-const emails = [
-  "mittalanish789@gmail.com",
-  "am.anishmittal@gmail.com",
-  "swarupkharulsk@gmail.com"
-]
+const emails = require("./src/services/sendemailsto");
+
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
@@ -28,7 +25,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const mailOptions = {
-  from: 'acmvitconnect@gmail.com', // sender address
+  from: 'noreply.acmvit@gmail.com', // sender address
   to: emails, // list of receivers
   subject: "Whatsapp groups ACM-CONNECT-VIT", // Subject line
   text: `Hello, all the groups for acm-connect is about to fill, please add new groups!`, // plain text body
@@ -80,8 +77,8 @@ app.post("/data", verifyToken, async (req, res) => {
   await docRef.set({
     name: req.body.name,
     joiningLink: req.body.joiningLink,
-    maxLimit: req.body.maxLimit,
-    currentCount: req.body.currentCount,
+    maxLimit: parseInt(req.body.maxLimit, 10),
+    currentCount: parseInt(req.body.currentCount, 10),
     allowMore: req.body.allowMore,
   });
   res.json({ Message: "Action Completed" });
@@ -90,7 +87,10 @@ app.post("/data", verifyToken, async (req, res) => {
 app.post("/update", verifyToken, async (req, res) => {
   const docRef = groups.doc(req.body.name);
   await docRef.update({
-    currentCount: req.body.currentCount,
+    joiningLink: req.body.joiningLink,
+    maxLimit: parseInt(req.body.maxLimit, 10),
+    currentCount: parseInt(req.body.currentCount, 10),
+    allowMore: req.body.allowMore
   });
   res.json({ Message: "Action Completed" });
 });
@@ -101,7 +101,7 @@ app.post("/delete", verifyToken, async (req, res) => {
   res.json({ Message: "Action Completed" });
 });
 
-app.get("/display", async (req, res) => {
+app.get("/display", verifyToken, async (req, res) => {
   const groupData = await groups.get();
   const data = [];
   groupData.forEach((doc) => {
@@ -130,7 +130,7 @@ app.get("/memoryUpdate", async (req, res) => {
 });
 
 /** to get the whatsapp link */
-app.get("/getLink", verifyToken, async (req, res) => {
+app.get("/getLink", async (req, res) => {
   if (isMemoryEmpty()) {
     /** check if memory is empty and fetch data from database and set it in memory */
     try {
@@ -155,12 +155,16 @@ app.get("/getLink", verifyToken, async (req, res) => {
   try {
     const lastGroup = groupList[groupList.length - 1];
     if (lastGroup.currentCount > lastGroup.maxLimit / 2) {
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          return console.log(error);
-        }
-        return console.log("Message sent: %s", info.messageId);
-      });
+      try {
+        await transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            return console.log(error);
+          }
+          return console.log("Message sent: %s", info.messageId);
+        });
+      } catch (e) {
+        return res.json({ success: false, step: 166, error: e.message });
+      }
     }
   } catch (e) {
     return res.json({ success: false, step: 105, error: e.message });
@@ -196,7 +200,7 @@ app.get("/getLink", verifyToken, async (req, res) => {
         currentCount,
         allowMore,
       });
-      return res.json({ success: true, link: joiningLink });
+      return res.status(302).redirect(joiningLink);
     }
   }
   return res.json({ success: false, error: "All groups are full" });

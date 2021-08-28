@@ -1,10 +1,8 @@
-{
-  "email": [
+const emails = [
     "mittalanish789@gmail.com",
     "am.anishmittal@gmail.com",
     "swarupkharulsk@gmail.com",
     "pranavdesai.psd@gmail.com",
-    "ananya.grover2020@vitstudent.ac.in",
-    "likhitajeesh20@gmail.com"
-  ]
-}
+];
+
+module.exports = emails;
