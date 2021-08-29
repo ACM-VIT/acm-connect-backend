@@ -26,7 +26,6 @@ router.get(
 
       // Get userId from token
       const userId = decoded.id;
-      console.log({ userId });
     } catch (err) {
       return next(createError.Unauthorized());
     }

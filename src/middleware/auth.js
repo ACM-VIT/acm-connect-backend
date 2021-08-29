@@ -30,7 +30,6 @@ module.exports = {
 
       // User id
       const userId = req.payload.id;
-      console.log({ "userId after token verification": userId });
       next();
     });
   },

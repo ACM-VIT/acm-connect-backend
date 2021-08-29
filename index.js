@@ -13,7 +13,6 @@ require("dotenv").config();
 
 const emails = require("./src/services/sendemailsto");
 
-
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
@@ -25,12 +24,11 @@ const transporter = nodemailer.createTransport({
 });
 
 const mailOptions = {
-  from: 'noreply.acmvit@gmail.com', // sender address
+  from: "noreply.acmvit@gmail.com", // sender address
   to: emails, // list of receivers
   subject: "Whatsapp groups ACM-CONNECT-VIT", // Subject line
   text: `Hello, all the groups for acm-connect is about to fill, please add new groups!`, // plain text body
 };
-
 
 // Passport config
 require("./src/auth/passport")(passport);
@@ -63,7 +61,6 @@ const {
 } = require("./src/services/memory");
 
 const port = process.env.PORT || 3001;
-console.log(serviceAccountObject);
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccountObject),
   databaseURL: process.env.DATABASEURL,
@@ -90,7 +87,7 @@ app.post("/update", verifyToken, async (req, res) => {
     joiningLink: req.body.joiningLink,
     maxLimit: parseInt(req.body.maxLimit, 10),
     currentCount: parseInt(req.body.currentCount, 10),
-    allowMore: req.body.allowMore
+    allowMore: req.body.allowMore,
   });
   res.json({ Message: "Action Completed" });
 });
@@ -142,14 +139,12 @@ app.get("/getLink", async (req, res) => {
         groupList.push(obj);
       });
       setMemoryArray(groupList);
-      console.log("memory was empty, fetched new values : ", getMemory());
     } catch (e) {
       return res.json({ success: false, step: 92, error: e.message });
     }
   }
 
   const groupList = getMemory();
-  console.log("listing all groups", groupList);
 
   /** If last group is half filled send a mail to the admin */
   try {
@@ -158,9 +153,9 @@ app.get("/getLink", async (req, res) => {
       try {
         await transporter.sendMail(mailOptions, (error, info) => {
           if (error) {
-            return console.log(error);
+            return console.error(error);
           }
-          return console.log("Message sent: %s", info.messageId);
+          return console.info("Message sent to admins!");
         });
       } catch (e) {
         return res.json({ success: false, step: 166, error: e.message });
