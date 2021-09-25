@@ -56,7 +56,7 @@ npm start
 
 ## Authors
 
-**Authors:** [Swarup Kharul]("https://github.com/SwarupKharul"), [Anish Mittal]("https://github.com/ANISH0309"), [Mannan Goyal](https://github.com/Mannan-Goyal), [Srinivas](https://github.com/cr-trojan23)
+**Authors:** [Swarup Kharul](https://github.com/SwarupKharul), [Anish Mittal](https://github.com/ANISH0309), [Mannan Goyal](https://github.com/Mannan-Goyal), [Srinivas V](https://github.com/cr-trojan23)
 
 **Mentors:** [Yash Kumar Verma](https://github.com/YashKumarVerma), [Shreyas K](https://github.com/HelixW)
 
